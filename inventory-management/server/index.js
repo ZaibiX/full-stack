@@ -1,5 +1,6 @@
-import dotenv from "dotenv";
-dotenv.config();
+// import dotenv from "dotenv";
+// dotenv.config();
+import "./config/loadEnv.js";
 import express from "express";
 import db from "./database/db.js";
 
