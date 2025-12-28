@@ -23,6 +23,12 @@ const productSchema = mongoose.Schema(
       required: true,
       enum: ["Electronics", "Clothing", "Books"],
     },
+    imageUrl: {
+      type: String,
+    },
+    cloudinaryId: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

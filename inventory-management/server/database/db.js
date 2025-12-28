@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+console.log("MongoDB URI:", process.env.MONGO_URI);
 
 const connectDB = async () => {
   try {
@@ -6,23 +7,9 @@ const connectDB = async () => {
     await mongoose.connect(process.env.MONGO_URI   );
     console.log("Connected to MongoDB!");
 
-    // Define a schema for your product
-    const productSchema = new mongoose.Schema({
-      name: String,
-    });
-
-    // Define the model for the 'Product' schema
-    const Product = mongoose.model("Product", productSchema); // Collection name will be "products"
-
-    // Create a new product instance
-    const newProduct = new Product({ name: "pcc" });
-
-    // Save the product to the database
-    await newProduct.save();
-    console.log("Product saved: pcc");
   } catch (error) {
-    console.log("OH NO ERROR");
-    console.log(error);
+    console.log("Mongo db error: ", error.message);
+    
   }
 };
 
