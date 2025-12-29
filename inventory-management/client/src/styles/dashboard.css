@@ -1,0 +1,14 @@
+
+.page-heading{
+    text-align: center;
+}
+.add-btn{
+    display: block;
+    margin: 1rem auto;
+    padding: 0.5rem 1rem;
+    background-color: #179d41;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
