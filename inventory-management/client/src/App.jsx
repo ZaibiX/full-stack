@@ -23,7 +23,7 @@ function App() {
     formData.append('description', "product description");
     formData.append('category', "Electronics");
 
-    await axios.post('http://localhost:3000/api/product', formData);
+    await axios.put('http://localhost:3000/api/product/6950f88476da34c4a47afc55', formData);
 
     
   }
