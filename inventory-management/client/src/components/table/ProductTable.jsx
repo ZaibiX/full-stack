@@ -1,5 +1,8 @@
 import "../../styles/productTable.css";
 import ProductRow from "./ProductRow";
+import Pagination from "./Pagination";
+import {useState, useEffect} from "react";
+import { Link } from "react-router";
 // import { dummyProducts } from "./dummyProducts";
  const dummyProducts = [
   {
@@ -65,10 +68,26 @@ import ProductRow from "./ProductRow";
 ];
 
 export default function ProductTable() {
+
+  const [page, setPage] = useState(1);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    // In a real application, fetch products from an API here
+    
+    setProducts(dummyProducts);
+  }, [page]);
+
+  function handleOnChangePage(newPage){
+    setPage(newPage);
+
+  }
+
   return (
     <div className="table-container">
-      <h2 className="table-title">Products</h2>
-
+      <h2 className="table-title" >Products</h2>
+     
+      <div style={{textAlign:"right"}}> <Link className="add-btn">Add New Item</Link> </div>
       <div className="table-wrapper">
         <table className="product-table">
           <thead>
@@ -92,7 +111,9 @@ export default function ProductTable() {
             ))}
           </tbody>
         </table>
+
       </div>
+      <Pagination currentPage={page} totalPages={3} onPageChange={handleOnChangePage} />
     </div>
   );
 }

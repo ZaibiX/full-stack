@@ -1,5 +1,5 @@
 import "../../styles/productTable.css";
-
+import { Link, NavLink } from "react-router";
 
 export default function ProductRow({ product, index }) {
   return (
@@ -11,8 +11,15 @@ export default function ProductRow({ product, index }) {
       <td data-label="Qty">{product.quantity}</td>
 
       <td data-label="Actions" className="actions">
-        <button className="btn view">View</button>
-        <button className="btn edit">Edit</button>
+        {/* <button className="btn view">View</button> */}
+        <Link to={`/view-product/${product.id}`} className="btn view">
+          View
+        </Link>
+        {/* <button className="btn edit"><Link to={`/edit-product/${product.id}`}>Edit</Link></button> */}
+
+        <Link to={`/edit-product/${product.id}`} className="btn edit">
+          Edit
+        </Link>
         <button className="btn delete">Delete</button>
       </td>
     </tr>
