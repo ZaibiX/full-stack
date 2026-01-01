@@ -3,6 +3,7 @@ import ProductRow from "./ProductRow";
 import Pagination from "./Pagination";
 import {useState, useEffect} from "react";
 import { Link } from "react-router";
+import axios from "axios";
 // import { dummyProducts } from "./dummyProducts";
  const dummyProducts = [
   {
@@ -66,16 +67,29 @@ import { Link } from "react-router";
     updatedAt: "2024-11-14T16:00:00.000Z",
   },
 ];
-
+const limit = 10;
 export default function ProductTable() {
 
   const [page, setPage] = useState(1);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([{name:"hi",_id:"1"}]);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     // In a real application, fetch products from an API here
-    
-    setProducts(dummyProducts);
+
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/products?page=${page}&limit=10`);
+        console.log("logging ",response.data)
+        setProducts(response.data.products);
+        setTotalPages(Math.ceil(response.data.totalProducts/limit));
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+    // setProducts(dummyProducts);
   }, [page]);
 
   function handleOnChangePage(newPage){
@@ -87,7 +101,7 @@ export default function ProductTable() {
     <div className="table-container">
       <h2 className="table-title" >Products</h2>
      
-      <div style={{textAlign:"right"}}> <Link className="add-btn">Add New Item</Link> </div>
+      <div style={{textAlign:"right"}}> <Link className="add-btn" to="/add-product">Add New Item</Link> </div>
       <div className="table-wrapper">
         <table className="product-table">
           <thead>
@@ -102,18 +116,20 @@ export default function ProductTable() {
           </thead>
 
           <tbody>
-            {dummyProducts.map((product, index) => (
-              <ProductRow
-                key={product._id}
-                product={product}
-                index={index}
-              />
-            ))}
-          </tbody>
+  {products.map((product, index) => (
+    <ProductRow
+      key={product._id}
+      product={product}
+      index={index}
+      page={page}
+      limit={limit}
+    />
+  ))}
+</tbody>
         </table>
 
       </div>
-      <Pagination currentPage={page} totalPages={3} onPageChange={handleOnChangePage} />
+      <Pagination currentPage={page} totalPages={totalPages} onPageChange={handleOnChangePage} />
     </div>
   );
 }

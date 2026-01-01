@@ -1,6 +1,38 @@
 import Product from "../models/products.model.js";
 import cloudinaryClient from "../utils/cloudinaryClient.js";
 
+
+import mongoose from "mongoose";
+
+
+export async function readSingleProduct(req, res) {
+  try {
+    const { id } = req.params;
+
+    // 1️⃣ Validate MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid product ID" }); //check for 24 characters
+    }
+
+    // 2️⃣ Find product
+    const product = await Product.findById(id);
+    
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // 3️⃣ Success response
+    return res.status(200).json({
+      product,
+    });
+
+  } catch (error) {
+    console.error("Error reading a product:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+
 export async function createProduct(req, res) {
     try {
         const { name, description, price, category, quantity } = req.body;

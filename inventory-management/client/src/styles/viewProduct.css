@@ -1,0 +1,37 @@
+.view-product-container {
+  max-width: 700px;
+  margin: 2rem auto;
+}
+
+.product-card {
+  display: flex;
+  gap: 1.5rem;
+  background-color: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.product-card img {
+  width: 250px;
+  height: auto;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.product-info p {
+  margin: 0.4rem 0;
+}
+
+.back-link {
+display: inline-block;
+  text-decoration: none; 
+   /* color: inherit; */
+  padding: 0.3rem 0.6rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  /* font-style: normal; */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin:15px
+}
