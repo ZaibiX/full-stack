@@ -1,5 +1,28 @@
-export default function ProductRow({ product, index, page, limit }) {
+import { Link } from "react-router";
+import axios from "axios";
+export default function ProductRow({ product, index, page, limit, fetchProducts }) {
   const rowNumber = (page - 1) * limit + index + 1;
+
+  async function handleDelete() {
+    // Implement delete functionality here
+    if(!confirm("Are you sure you want to delete this product?")){
+      return;
+    }
+    console.log(`Delete product with ID: ${product._id}`);
+
+    try{
+      const res= await axios.delete(`http://localhost:3000/api/product/${product._id}`);
+      console.log("Delete response:",res.data);
+      alert("Product deleted successfully");
+      // window.location.reload(); 
+      fetchProducts();
+
+
+    }catch(err){
+      console.error("Error deleting product:", err);
+      alert("Failed to delete product");
+    } 
+  }
 
   return (
     <tr className="product-row">
@@ -17,7 +40,7 @@ export default function ProductRow({ product, index, page, limit }) {
         <Link to={`/edit-product/${product._id}`} className="btn edit">
           Edit
         </Link>
-        <button className="btn delete">Delete</button>
+        <button className="btn delete" onClick={handleDelete}>Delete</button>
       </td>
     </tr>
   );

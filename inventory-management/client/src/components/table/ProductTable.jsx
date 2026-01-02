@@ -67,17 +67,17 @@ import axios from "axios";
     updatedAt: "2024-11-14T16:00:00.000Z",
   },
 ];
+
+
+
 const limit = 10;
 export default function ProductTable() {
 
   const [page, setPage] = useState(1);
-  const [products, setProducts] = useState([{name:"hi",_id:"1"}]);
+  const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    // In a real application, fetch products from an API here
-
-    const fetchProducts = async () => {
+  const fetchProducts = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/products?page=${page}&limit=10`);
         console.log("logging ",response.data)
@@ -88,6 +88,11 @@ export default function ProductTable() {
       }
     };
 
+  useEffect(() => {
+    // In a real application, fetch products from an API here
+
+    
+
     fetchProducts();
     // setProducts(dummyProducts);
   }, [page]);
@@ -96,6 +101,10 @@ export default function ProductTable() {
     setPage(newPage);
 
   }
+
+  if(!products){
+    return <div>Loading...</div>
+  } 
 
   return (
     <div className="table-container">
@@ -123,6 +132,7 @@ export default function ProductTable() {
       index={index}
       page={page}
       limit={limit}
+      fetchProducts={fetchProducts}
     />
   ))}
 </tbody>

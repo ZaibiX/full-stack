@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../styles/productForm.css";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import axios from "axios";
 
 export default function AddProduct() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ export default function AddProduct() {
     category: "",
     imageFile: null,
   });
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
 
   // handle text & select inputs
   function handleChange(e) {
@@ -42,15 +45,22 @@ export default function AddProduct() {
     data.append("imageFile", formData.imageFile);
 
     try {
-      const res = await fetch("http://localhost:5000/api/products", {
-        method: "POST",
-        body: data, // ❗ DO NOT set Content-Type manually
+      setLoading(true);
+      const res = await axios.post("http://localhost:3000/api/product", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      const result = await res.json();
+      const result = res.data;
       console.log("Product added:", result);
+
+      alert("Product added successfully!");
+      navigate("/");
     } catch (error) {
       console.error("Error adding product:", error);
+    }finally{
+      setLoading(false);
     }
   }
 
@@ -131,8 +141,8 @@ export default function AddProduct() {
           />
         </label>
 
-        <button type="submit" className="submit-btn">
-          Add Product
+        <button type="submit" className="submit-btn" disabled={loading}>
+          {loading?"Loading":"Add Product"}
         </button>
       </form>
     </div>

@@ -1,14 +1,39 @@
 import "../styles/viewProduct.css";
-import { Link } from "react-router";        
+import { Link,useParams } from "react-router";  
+import { useEffect, useState } from "react"; 
+import axios from "axios";
+
 export default function ViewProduct() {
-  const product = {
-    name: "Wireless Headphones",
-    description: "Noise-cancelling wireless headphones",
-    price: 120,
-    quantity: 25,
-    category: "Electronics",
-    imageUrl: "https://via.placeholder.com/300",
-  };
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  useEffect(()=>{
+     async function fetchProduct() {
+      try {
+        const res = await axios.get(`http://localhost:3000/api/single-product/${id}`);
+        console.log("Single product data:", res.data);
+        const data = res.data;
+        setProduct(data.product);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    }
+
+    fetchProduct();
+  },[id]);
+  // const product = {
+  //   name: "Wireless Headphones",
+  //   description: "Noise-cancelling wireless headphones",
+  //   price: 120,
+  //   quantity: 25,
+  //   category: "Electronics",
+  //   imageUrl: "https://via.placeholder.com/300",
+  // };
+
+  if(!product){
+    return <div>Loading...</div>;
+  }
+
+
 
   return (
     <div>

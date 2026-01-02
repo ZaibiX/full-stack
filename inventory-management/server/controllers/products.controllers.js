@@ -56,8 +56,9 @@ export async function createProduct(req, res) {
         }
         // const imageFile = req.imageFile.buffer;
 
-        const byteArrayBuffer = req.file.buffer;
-        const uploadResult = await new Promise((resolve, reject) => {
+        const byteArrayBuffer = req.file?.buffer || null;
+        if(byteArrayBuffer){
+            const uploadResult = await new Promise((resolve, reject) => {
             cloudinaryClient.uploader.upload_stream({
                 folder: "products",
             }, (error, uploadResult) => {
@@ -69,7 +70,6 @@ export async function createProduct(req, res) {
         });
 
         console.log("Upload Result:", uploadResult);
-
         const newProduct = new Product({
             name,
             description,
@@ -83,6 +83,22 @@ export async function createProduct(req, res) {
         await newProduct.save();
 
         return res.status(201).json({ message: "Product created successfully" });
+        } else{
+            const newProduct = new Product({
+                name,
+                description,
+                price: numPrice,
+                category,
+                quantity: numQuantity,
+            });
+    
+            await newProduct.save();
+    
+            return res.status(201).json({ message: "Product created successfully" });   
+        }
+
+
+        
     } catch (error) {
         console.error("Error creating product:", error);
         return res.status(500).json({ message: "Internal server error" });
