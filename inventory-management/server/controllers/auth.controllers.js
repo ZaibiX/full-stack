@@ -22,8 +22,9 @@ export async function login(req, res)
 
         }
 
-        const token = generateToken(user._id);
-
+        const token = generateToken(user._id, user.role);
+        
+        console.log("Login successful, generated token for:", email);
         return res.cookie("jwt", token, {
             httpOnly:true, //js cannot access cookie
             secure: process.env.NODE_ENV !== "development", //only https not http
@@ -33,6 +34,7 @@ export async function login(req, res)
         }).json({
             name:user.name,
             email:user.email,
+            role:user.role,
         }).status(200)
 
 
@@ -72,7 +74,9 @@ export async function signUp(req,res){
     if(newUser){
         await newUser.save();
 
-        const token = generateToken(newUser._id);
+        const token = generateToken(newUser._id, newUser.role);
+
+        console.log("New User Created: ", newUser);
         return res.cookie("jwt", token, {
             httpOnly:true, //js cannot access cookie
             secure: process.env.NODE_ENV !== "development", //only https not http

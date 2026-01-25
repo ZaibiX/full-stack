@@ -6,7 +6,7 @@ import db from "./database/db.js";
 
 import cors from "cors";
 // import multer from "multer";
-import router from "./routes/routes.js";
+import productRouter from "./routes/productRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 
 // const upload = multer({ dest: 'uploads/' });
@@ -22,13 +22,13 @@ app.use(
   })
 );
 
-// app.use(express.json()); //body-parser
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); //body-parser
+app.use(express.urlencoded({ extended: true }));
 // app.use(express.static('static'));
 
 db();
 
-app.use("/api", router);
+app.use("/api", productRouter);
 app.use("/api", authRouter);
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
