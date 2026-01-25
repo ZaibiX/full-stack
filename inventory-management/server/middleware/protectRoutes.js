@@ -1,13 +1,13 @@
-import { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 export default function protectRoutes(req, res, next){
-    const token = req.cookies.jwt;
+    const token = req.cookies?.jwt;
 
     if(!token){
         return  res.status(401).json({message:"Unauthorized, no token"});
     }
 
     try{
-        const decoded = verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         // req.userId = decoded.userId;
         req.user = {role: decoded.userRole, id: decoded.userId};
         next();
