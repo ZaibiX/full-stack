@@ -3,12 +3,12 @@ import Dashboard from "../../pages/Dashboard.jsx";
 import AddProduct from "../../pages/AddProduct.jsx";
 import EditProduct from "../../pages/EditProduct.jsx";
 import ViewProduct from "../../pages/ViewProduct.jsx";
+import App from "../../App.jsx";
 
 export default function Router()
 {
     return(
-        <BrowserRouter>
-            <Routes>
+         <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/add-product" element={<AddProduct />} />
                 <Route path="/edit-product/:id" element={<EditProduct />} />
@@ -16,6 +16,7 @@ export default function Router()
 
 
             </Routes>
-        </BrowserRouter>
+           
+       
     )
 }
