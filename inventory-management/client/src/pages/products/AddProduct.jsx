@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../styles/productForm.css";
+import "../../styles/productForm.css";
 import { Link, useNavigate } from "react-router";
 import axios from "axios";
 

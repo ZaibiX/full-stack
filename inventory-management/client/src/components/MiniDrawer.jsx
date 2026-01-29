@@ -22,6 +22,8 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import DashboardContent from './DashboardContent';
+// import {Outlet} from "react-router"
+import {Link} from "react-router"
 
 const drawerWidth = 240;
 
@@ -103,7 +105,13 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function MiniDrawer() {
+const menuItems = [
+  { text: 'Home', path: '/app/dashboard', icon: <DashboardIcon /> },
+  { text: 'Products', path: '/app/products', icon: <InventoryIcon /> },
+  { text: 'Users', path: '/app/users', icon: <PeopleIcon /> },
+];
+
+export default function MiniDrawer({children}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -148,13 +156,14 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Home', 'Products', 'Users'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+          {menuItems.map((item, index) => (
+            <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={[
                   {
                     minHeight: 48,
                     px: 2.5,
+
                   },
                   open
                     ? {
@@ -164,6 +173,9 @@ export default function MiniDrawer() {
                         justifyContent: 'center',
                       },
                 ]}
+
+                component={Link}
+                to={item.path}
               >
                 <ListItemIcon
                   sx={[
@@ -180,13 +192,10 @@ export default function MiniDrawer() {
                         },
                   ]}
                 >
-                  {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
-                  {index===0 && <DashboardIcon /> }
-                  {index===1 && <InventoryIcon />}
-                  {index===2 && <PeopleIcon /> }
+                  {item.icon}
                 </ListItemIcon>
                 <ListItemText
-                  primary={text}
+                  primary={item.text}
                   sx={[
                     open
                       ? {
@@ -256,7 +265,9 @@ export default function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <DashboardContent/>
+        {/* <DashboardContent/> */}
+        {/* <Outlet /> */}
+        {children}
       </Box>
     </Box>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams,useNavigate } from "react-router";
-import "../styles/productForm.css";
+import "../../styles/productForm.css";
 import axios from "axios";
 
 export default function EditProduct() {

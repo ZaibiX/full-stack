@@ -1,4 +1,4 @@
-import "../styles/viewProduct.css";
+import "../../styles/viewProduct.css";
 import { Link,useParams } from "react-router";  
 import { useEffect, useState } from "react"; 
 import axios from "axios";
