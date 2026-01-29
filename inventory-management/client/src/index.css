@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
 body{
-    @apply bg-gray-50;
+    /* @apply bg-gray-50; */
+    background-color: #F9FAFB !important;
+
+}
+
+.title{
+    font-family: playwrite gb j guides, cursive;
+     font-weight: 400;
+     font-style: normal;
+     font-size: 2rem;
+     /* font-weight: bold; */
+     font-style: italic;
+     margin-bottom:0px;
+     color: #2563eb;
 }

@@ -8,7 +8,7 @@ import { Routes, Route } from 'react-router';
 import AddProduct from './pages/AddProduct.jsx';
 import EditProduct from './pages/EditProduct.jsx';
 import ViewProduct from './pages/ViewProduct.jsx';
-import LandingPage from './components/LandingPage.jsx';
+import LandingPage from './pages/LandingPage.jsx';
 
 // axios.defaults.withCredentials = true;
 
@@ -16,7 +16,7 @@ function App() {
   return (
     <>
 
-      <Navbar />
+      {/* <Navbar /> */}
 
 
       <Routes>

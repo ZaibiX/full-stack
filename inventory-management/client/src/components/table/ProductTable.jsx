@@ -4,6 +4,7 @@ import Pagination from "./Pagination";
 import {useState, useEffect} from "react";
 import { Link } from "react-router";
 import axios from "axios";
+import Button from '@mui/material/Button';
 // import { dummyProducts } from "./dummyProducts";
  const dummyProducts = [
   {
@@ -110,7 +111,7 @@ export default function ProductTable() {
     <div className="table-container">
       <h2 className="table-title" >Products</h2>
      
-      <div style={{textAlign:"right"}}> <Link className="add-btn" to="/add-product">Add New Item</Link> </div>
+      <div style={{textAlign:"right", marginBottom:"5px"}}> <Button component={Link} variant="contained" color="success" to="/add-product" disableElevation={true}>Add New Item</Button> </div>
       <div className="table-wrapper">
         <table className="product-table">
           <thead>

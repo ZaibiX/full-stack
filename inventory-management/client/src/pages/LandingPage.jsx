@@ -1,10 +1,11 @@
 import React from 'react';
+import Navbar from '../components/Navbar.jsx';
 
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
       
-
+      <Navbar />
       {/* --- HERO SECTION --- */}
       <main className="max-w-7xl mx-auto px-6 py-20 md:py-12 flex flex-col md:flex-row items-center">
         {/* Left Content */}

@@ -1,14 +1,16 @@
-import ProductTable from "../components/table/ProductTable" 
+// import ProductTable from "../components/table/ProductTable" 
 import "../styles/dashboard.css"
+import MiniDrawer from "../components/MiniDrawer"
 export default function Dashboard() {
     
 
     return(
-        <div>
-            <h1 className="page-heading">Inventory Management Dashboard</h1>
+        <div >
+            <MiniDrawer />
+            {/* <h1 className="page-heading">Inventory Management Dashboard</h1> */}
             
 
-            <ProductTable />
+            {/* <ProductTable /> */}
         </div>
     )
 }
