@@ -109,7 +109,7 @@ export default function ProductTable() {
 
   return (
     <div className="table-container">
-      <h2 className="table-title" >Products</h2>
+      {/* <h2 className="table-title" >Products</h2> */}
      
       <div style={{textAlign:"right", marginBottom:"5px"}}> <Button component={Link} variant="contained" color="success" to="/add-product" disableElevation={true}>Add New Item</Button> </div>
       <div className="table-wrapper">

@@ -23,7 +23,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import DashboardContent from './DashboardContent';
 // import {Outlet} from "react-router"
-import {Link} from "react-router"
+import { Link, useLocation } from "react-router"
 
 const drawerWidth = 240;
 
@@ -111,10 +111,10 @@ const menuItems = [
   { text: 'Users', path: '/app/users', icon: <PeopleIcon /> },
 ];
 
-export default function MiniDrawer({children}) {
+export default function MiniDrawer({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-
+  const location = useLocation();
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -126,7 +126,7 @@ export default function MiniDrawer({children}) {
   return (
     <Box sx={{ display: 'flex', mb: 10 }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} style={{backgroundColor:"#F9FAFB", }} >
+      <AppBar position="fixed" open={open} style={{ backgroundColor: "#F9FAFB", }} >
         <Toolbar>
           <IconButton
             color="black"
@@ -148,7 +148,7 @@ export default function MiniDrawer({children}) {
           <h1 className="title">StockTrack</h1>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open} style={{backgroundColor:"#F9FAFB", }} slotProps={{ paper: {sx:{backgroundColor:"#F9FAFB",}},  }}>
+      <Drawer variant="permanent" open={open} style={{ backgroundColor: "#F9FAFB", }} slotProps={{ paper: { sx: { backgroundColor: "#F9FAFB", } }, }}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -156,22 +156,31 @@ export default function MiniDrawer({children}) {
         </DrawerHeader>
         <Divider />
         <List>
-          {menuItems.map((item, index) => (
-            <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
+          {menuItems.map((item, index) => {
+
+            // Check if this specific item is the active route
+            const isActive = location.pathname === item.path;
+
+            return (<ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={[
                   {
                     minHeight: 48,
                     px: 2.5,
-
+                    backgroundColor: isActive ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
+                    borderRight: isActive ? '4px solid #1976d2' : 'none',
+                    boxSizing: 'border-box',
+                    '&:hover': {
+                      backgroundColor: isActive ? 'rgba(25, 118, 210, 0.12)' : 'rgba(0, 0, 0, 0.04)',
+                    },
                   },
                   open
                     ? {
-                        justifyContent: 'initial',
-                      }
+                      justifyContent: 'initial',
+                    }
                     : {
-                        justifyContent: 'center',
-                      },
+                      justifyContent: 'center',
+                    },
                 ]}
 
                 component={Link}
@@ -182,14 +191,16 @@ export default function MiniDrawer({children}) {
                     {
                       minWidth: 0,
                       justifyContent: 'center',
+
+
                     },
                     open
                       ? {
-                          mr: 3,
-                        }
+                        mr: 3,
+                      }
                       : {
-                          mr: 'auto',
-                        },
+                        mr: 'auto',
+                      },
                   ]}
                 >
                   {item.icon}
@@ -199,16 +210,16 @@ export default function MiniDrawer({children}) {
                   sx={[
                     open
                       ? {
-                          opacity: 1,
-                        }
+                        opacity: 1,
+                      }
                       : {
-                          opacity: 0,
-                        },
+                        opacity: 0,
+                      },
                   ]}
                 />
               </ListItemButton>
-            </ListItem>
-          ))}
+            </ListItem>)
+          })}
         </List>
         {/* <Divider />
         <List>
