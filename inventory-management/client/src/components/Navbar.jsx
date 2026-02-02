@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Button from '@mui/material/Button';
 import {
   Dialog,
   DialogPanel,
@@ -36,7 +37,7 @@ import '../styles/navbar.css'
 //   { name: 'Contact sales', href: '#', icon: PhoneIcon },
 // ]
 
-export default function Example() {
+export default function Example({scrollToLogin}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -119,10 +120,10 @@ export default function Example() {
             Company
           </a>
         </PopoverGroup> */}
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" className="text-sm/6 font-semibold text-gray-900">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end text-gray-900">
+          <Button color="inherit" onClick={scrollToLogin} className="text-sm/6 font-semibold text-gray-900">
             Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          </Button>
           
         </div>
       </nav>
@@ -191,7 +192,10 @@ export default function Example() {
               </div> */}
               <div className="py-6">
                 <a
-                  href="#"
+                  onClick={()=>{
+                    setMobileMenuOpen(false);
+                    scrollToLogin();
+                  }}
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   Log in

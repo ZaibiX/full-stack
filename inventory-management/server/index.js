@@ -2,13 +2,14 @@
 // dotenv.config();
 import "./config/loadEnv.js";
 import express from "express";
-import db from "./database/db.js";
+import db from "./config/database/db.js";
 
 import cors from "cors";
 // import multer from "multer";
 import productRouter from "./routes/productRoutes.js";
 import authRouter from "./routes/authRoutes.js";
-
+import userRouter from "./routes/userRoutes.js";
+import cookieParser from "cookie-parser";
 // const upload = multer({ dest: 'uploads/' });
 
 const app = express();
@@ -24,12 +25,15 @@ app.use(
 
 app.use(express.json()); //body-parser
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 // app.use(express.static('static'));
 
 db();
 
 app.use("/api", productRouter);
-app.use("/api", authRouter);
+app.use("/api/auth", authRouter);
+app.use("/api", userRouter);
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });

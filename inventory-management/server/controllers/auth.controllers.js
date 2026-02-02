@@ -94,3 +94,22 @@ export async function signUp(req,res){
         return res.status(500).json({message:"Internal server error while sign up"});
   }
 }
+
+export function logout(req,res)
+{
+    
+    try {
+        // res.cookie("jwt", "", { maxAge: 0 });
+        res.cookie("jwt", "", { expires: new Date(0) });
+        res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+        console.log("Error in logout controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+
+}
+
+export function checkAuth(req,res)
+{
+    return res.status(200).json({message:"User is authenticated", user:req.user});
+}

@@ -15,5 +15,7 @@ router.post("/product",upload.single("imageFile"), protectRoutes, allowedRoles([
 router.put("/product/:id",upload.single("imageFile") ,protectRoutes, allowedRoles(["Admin", "Store-manager"]),updateProduct);
 
 router.delete("/product/:id",protectRoutes, allowedRoles(["Admin", "Store-manager"]), deleteProduct);
+
+
 export default router;
 
