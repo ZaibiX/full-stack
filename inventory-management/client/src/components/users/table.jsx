@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
   Paper, IconButton, Button, Dialog, DialogTitle, DialogContent, 
@@ -7,10 +7,12 @@ import {
 import { Edit, Delete, PersonAdd, Mail, Shield } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
 
-export default function UserTable({ users }) {
+export default function UserTable({ users, onDelete }) {
     const navigate = useNavigate();
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  
 
   const handleDeleteClick = (user) => {
     setSelectedUser(user);
@@ -20,8 +22,11 @@ export default function UserTable({ users }) {
   const confirmDelete = () => {
     console.log("Deleting user:", selectedUser._id);
     // API Call: axios.delete(`/api/users/${selectedUser._id}`)
+    onDelete(selectedUser._id);
     setOpenDelete(false);
   };
+
+
   
     return (
     <div>

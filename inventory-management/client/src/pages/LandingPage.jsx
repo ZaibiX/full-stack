@@ -2,11 +2,12 @@ import Navbar from '../components/Navbar.jsx';
 import Footer from "../components/Footer.jsx"
 import LoginForm from '../components/LoginForm.jsx';
 import {useRef} from "react";
-
+import useAuth from '../store/authStore.js';
+import {Navigate} from "react-router";
 const LandingPage = () => {
 
   const emailLoginRef = useRef(null);
-
+  const {user} = useAuth();
   function scrollToLogin(){
     // 1. Focus the input (this also helps the user start typing)
     emailLoginRef.current?.focus();
@@ -14,6 +15,10 @@ const LandingPage = () => {
     // 2. Scroll the form into view smoothly
     emailLoginRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
+
+  if(user){
+    return <Navigate to="/app/dashboard" replace />;
+  }
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
       

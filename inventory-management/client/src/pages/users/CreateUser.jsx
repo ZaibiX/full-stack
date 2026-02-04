@@ -2,18 +2,31 @@ import React, { useState } from 'react';
 import { Box, TextField, MenuItem, Button, Paper, Typography } from '@mui/material';
 import { ArrowBack, Save } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
+import axiosInstance from '../../utils/axiosInstance';
 
 const CreateUser = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', role: 'Employee'
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     console.log("Submit:", formData);
     // API Call: axios.post('/api/users', formData)
-    navigate('/users');
+    try{
+      const response = await axiosInstance.post('/api/user', formData);
+      // console.log("User created:", response.data);
+
+    } 
+    catch(err){
+      console.error("Error creating user:", err.response?.data?.message|| err.message);
+      setLoading(false);
+      return;
+    }
+    navigate('/app/users');
   };
 
   return (
@@ -51,6 +64,7 @@ const CreateUser = () => {
             type="submit" fullWidth variant="contained" 
             size="large" startIcon={<Save />}
             className="bg-blue-600 h-12 mt-4"
+            loading={loading}
           >
             Create User Account
           </Button>

@@ -38,9 +38,13 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
-
+        const userToDelete = await User.findById(id);
+        if (!userToDelete) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        // console.log(req.user.id);
         // Security: Prevent Admin from deleting their own account
-        if (id === req.user._id.toString()) {
+        if (userToDelete.id === req.user.id.toString()) {
             return res.status(400).json({ message: "You cannot delete your own admin account!" });
         }
 
@@ -57,4 +61,15 @@ export const deleteUser = async (req, res) => {
 export function createUser(req, res) {
     // Implementation for creating a new user
     return signUp(req, res);
+}
+
+export async function readSingleUser(req, res) {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id).select("-password");
+        if (!user) return res.status(404).json({ message: "User not found" });
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching user details", error: error.message });
+    }
 }

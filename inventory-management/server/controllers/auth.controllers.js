@@ -28,13 +28,13 @@ export async function login(req, res)
         return res.cookie("jwt", token, {
             httpOnly:true, //js cannot access cookie
             secure: process.env.NODE_ENV !== "development", //only https not http
-            maxAge: 1000*60*60*24, //1 day
+            maxAge: 1000*60*60, //1 hr
             sameSite:"strict", //only send to this site from where it is sent
 
         }).json({
-            name:user.name,
+            user:{name:user.name,
             email:user.email,
-            role:user.role,
+            role:user.role,}
         }).status(200)
 
 
@@ -74,18 +74,13 @@ export async function signUp(req,res){
     if(newUser){
         await newUser.save();
 
-        const token = generateToken(newUser._id, newUser.role);
+        // const token = generateToken(newUser._id, newUser.role);
 
         console.log("New User Created: ", newUser);
-        return res.cookie("jwt", token, {
-            httpOnly:true, //js cannot access cookie
-            secure: process.env.NODE_ENV !== "development", //only https not http
-            maxAge: 1000*60*60*24, //1 day
-            sameSite:"strict", //only send to this site from where it is sent
-
-        }).json({
-            name:newUser.name,
+        return res.json({
+            user:{name:newUser.name,
             email:newUser.email,
+            role:newUser.role,}
         }).status(200)
     }
   }catch(err)
@@ -111,5 +106,47 @@ export function logout(req,res)
 
 export function checkAuth(req,res)
 {
-    return res.status(200).json({message:"User is authenticated", user:req.user});
+    return res.status(200).json({message:"User is authenticated", user:{email:req.user.email, role:req.user.role}});
 }
+
+// export const protectRoutes = async (req, res, next) => {
+//     try {
+//         // 1. Get token from cookies
+//         const token = req.cookies?.jwt;
+
+//         if (!token) {
+//             return res.status(401).json({ message: "Unauthorized - No Token Provided" });
+//         }
+
+//         // 2. Verify token
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+//         if (!decoded) {
+//             return res.status(401).json({ message: "Unauthorized - Invalid Token" });
+//         }
+
+//         // 3. Find user and attach to request (Recommended)
+//         // Instead of just ID and Role, fetching the user ensures the account still exists
+//         const user = await User.findById(decoded.userId).select("-password");
+
+//         if (!user) {
+//             return res.status(404).json({ message: "User not found" });
+//         }
+
+//         // Attach full user object to the request
+//         req.user = user;
+
+//         // 4. CRITICAL: Call next() to move to the next middleware/controller
+//         next();
+        
+//     } catch (error) {
+//         console.error("Error in protectRoutes middleware:", error.message);
+
+//         // Specific error handling for expired tokens
+//         if (error.name === "TokenExpiredError") {
+//             return res.status(401).json({ message: "Unauthorized - Token Expired" });
+//         }
+
+//         res.status(500).json({ message: "Internal Server Error" });
+//     }
+// };

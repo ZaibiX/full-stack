@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, MenuItem, Button, Paper, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router';
+import axiosInstance from '../../utils/axiosInstance';
 
 const EditUser = () => {
   const { id } = useParams();
@@ -10,9 +11,21 @@ const EditUser = () => {
   useEffect(() => {
     // API Call: axios.get(`/api/users/${id}`).then(res => setFormData(res.data))
     // For now, using dummy data
-    setFormData({ name: 'John Doe', email: 'john@example.com', role: 'Admin' });
+    async function fetchUserDetails() {
+      const response = await axiosInstance.get(`/api/user/${id}`);
+      setFormData(response.data);
+    }
+    // setFormData({ name: 'John Doe', email: 'john@example.com', role: 'Admin' });
+    fetchUserDetails();
   }, [id]);
 
+  async function handleUpdate() {
+    // API Call: axios.put(`/api/users/${id}`, formData)
+    console.log("Updating user:", id, formData);
+    await axiosInstance.put(`/api/user/${id}`, formData);
+    navigate('/app/users');
+  }
+  
   return (
     <div className="p-4 md:p-8 max-w-2xl mx-auto">
       <Paper className="p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm md:w-4/5 ">
@@ -37,7 +50,8 @@ const EditUser = () => {
           
           <div className="flex gap-3 pt-4">
             <Button fullWidth variant="outlined" onClick={() => navigate('/app/users')}>Cancel</Button>
-            <Button fullWidth variant="contained" color="primary" className="bg-blue-600">Update User</Button>
+            <Button fullWidth variant="contained" color="primary" onClick={handleUpdate}
+            className="bg-blue-600">Update User</Button>
           </div>
         </div>
       </Paper>

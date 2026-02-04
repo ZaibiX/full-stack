@@ -22,8 +22,11 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import DashboardContent from './DashboardContent';
+import Button from '@mui/material/Button';
+import LogoutIcon from '@mui/icons-material/Logout';
 // import {Outlet} from "react-router"
 import { Link, useLocation } from "react-router"
+import useAuth from '../store/authStore.js';
 
 const drawerWidth = 240;
 
@@ -106,11 +109,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const menuItems = [
-  { text: 'Home', path: '/app/dashboard', icon: <DashboardIcon /> },
-  { text: 'Products', path: '/app/products', icon: <InventoryIcon /> },
-  { text: 'Users', path: '/app/users', icon: <PeopleIcon /> },
+  { text: 'Home', path: '/app/dashboard', icon: <DashboardIcon />, allowedRoles: ['Admin', 'Store-manager'] },
+  { text: 'Products', path: '/app/products', icon: <InventoryIcon /> , allowedRoles: ['Admin', 'Store-manager', 'Employee']},
+  { text: 'Users', path: '/app/users', icon: <PeopleIcon />, allowedRoles: ['Admin'] },
 ];
-
+  
 export default function MiniDrawer({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -123,6 +126,7 @@ export default function MiniDrawer({ children }) {
     setOpen(false);
   };
 
+  const { logout, user, authLoading } = useAuth();
   return (
     <Box sx={{ display: 'flex', mb: 10 }}>
       <CssBaseline />
@@ -146,6 +150,8 @@ export default function MiniDrawer({ children }) {
             Mini variant drawer
           </Typography> */}
           <h1 className="title">StockTrack</h1>
+          <Button sx={{ml:"auto"}} loading={authLoading} onClick={logout} variant="outlined" endIcon={<LogoutIcon />}>Logout</Button>
+
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open} style={{ backgroundColor: "#F9FAFB", }} slotProps={{ paper: { sx: { backgroundColor: "#F9FAFB", } }, }}>
@@ -157,6 +163,11 @@ export default function MiniDrawer({ children }) {
         <Divider />
         <List>
           {menuItems.map((item, index) => {
+
+            // Check if the user's role is allowed to see this menu item
+            if (!item.allowedRoles.includes(user.role)) {
+              return null; // Skip rendering this item
+            }
 
             // Check if this specific item is the active route
             const isActive = location.pathname === item.path;

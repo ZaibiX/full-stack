@@ -8,7 +8,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
     return (
         <div className="pagination">
             <button
-                className="prev-btn"
+                className="prev-btn  disabled:text-gray-400 disabled:cursor-not-allowed"
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
             >
@@ -25,7 +25,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
                 </button>
             ))}
             <button
-                className="next-btn"
+                className="next-btn disabled:text-gray-400 disabled:cursor-not-allowed"
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
             >

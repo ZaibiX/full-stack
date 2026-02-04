@@ -10,6 +10,7 @@ import productRouter from "./routes/productRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
+import dashboardDataRouter from "./routes/dashboardDataRoutes.js";
 // const upload = multer({ dest: 'uploads/' });
 
 const app = express();
@@ -33,6 +34,7 @@ db();
 app.use("/api", productRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", userRouter);
+app.use("/api", dashboardDataRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

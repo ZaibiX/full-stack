@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Login, ArrowForward } from '@mui/icons-material';
+import useAuth from '../store/authStore';
+import {Button} from '@mui/material';
+
 
 const LoginForm = ({emailLoginRef}) => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
 
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const {login, authLoading} = useAuth();
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Logging in with:", formData);
+    login(formData);
     // Integration logic for JWT goes here
+  
   };
 
   return (
@@ -57,12 +63,15 @@ const LoginForm = ({emailLoginRef}) => {
         </div>
 
         {/* Login Button */}
-        <button
+        <Button
           type="submit"
           className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-blue-700 hover:shadow-lg active:scale-95 transition-all"
+          variant="contained"
+          loading={authLoading}
+
         >
           Sign In <ArrowForward fontSize="small" />
-        </button>
+        </Button>
 
         {/* <p className="text-center text-sm text-gray-500 mt-4">
           Don't have an account? <span className="text-blue-600 font-bold cursor-pointer hover:underline">Contact Admin</span>

@@ -1,5 +1,5 @@
 import express from "express";
-import { readAllUsers, updateUser, deleteUser, createUser } from "../controllers/users.controllers.js";
+import { readAllUsers, updateUser, deleteUser, createUser, readSingleUser } from "../controllers/users.controllers.js";
 import protectRoutes from "../middleware/protectRoutes.js";
 import allowedRoles from "../middleware/allowedRoles.js";
 
@@ -15,5 +15,9 @@ userRouter.put("/user/:id", protectRoutes, allowedRoles(["Admin"]), updateUser);
 userRouter.delete("/user/:id", protectRoutes, allowedRoles(["Admin"]), deleteUser);
 // 4 creating or sign up 
 userRouter.post("/user", protectRoutes, allowedRoles(["Admin"]), createUser);
+//5 get single user details
+userRouter.get("/user/:id", protectRoutes, allowedRoles(["Admin"]), readSingleUser);
+
+
 export default userRouter;
 

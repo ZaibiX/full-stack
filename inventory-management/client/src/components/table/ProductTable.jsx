@@ -1,12 +1,14 @@
 import "../../styles/productTable.css";
 import ProductRow from "./ProductRow";
-import Pagination from "./Pagination";
-import {useState, useEffect} from "react";
-import { Link } from "react-router";
-import axios from "axios";
-import Button from '@mui/material/Button';
+// import Pagination from "./Pagination";
+// import {useState, useEffect} from "react";
+// import { Link } from "react-router";
+// import axios from "axios";
+// import axiosInstance from "../../utils/axiosInstance";
+// import Button from '@mui/material/Button';
+// import useAuth from "../../store/authStore.js";
 // import { dummyProducts } from "./dummyProducts";
- const dummyProducts = [
+const dummyProducts = [
   {
     _id: "65f1a1c1a1a1a1a1a1a1a1a1",
     name: "Wireless Headphones",
@@ -71,49 +73,58 @@ import Button from '@mui/material/Button';
 
 
 
-const limit = 10;
-export default function ProductTable() {
+// const limit = 10;
+export default function ProductTable({ products,page,limit,handleDelete , userRole}) {
 
-  const [page, setPage] = useState(1);
-  const [products, setProducts] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
+  // const [page, setPage] = useState(1);
+  // const [products, setProducts] = useState([]);
+  // const [totalPages, setTotalPages] = useState(1);
+  // const {user} = useAuth();
 
-  const fetchProducts = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/api/products?page=${page}&limit=10`);
-        console.log("logging ",response.data)
-        setProducts(response.data.products);
-        setTotalPages(Math.ceil(response.data.totalProducts/limit));
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
+  // const fetchProducts = async () => {
+  //     try {
+  //       if(activeFilter){
+  //       const response = await axiosInstance.get(`api/products?page=${page}&limit=10&filter=${activeFilter}`);
+  //       console.log("logging ",response.data)
+  //       setProducts(response.data.products);
+  //       setTotalPages(Math.ceil(response.data.totalProducts/limit));
+  //       return;
 
-  useEffect(() => {
-    // In a real application, fetch products from an API here
+  //       }
+  //       const response = await axiosInstance.get(`api/products?page=${page}&limit=10`);
+  //       console.log("logging ",response.data)
+  //       setProducts(response.data.products);
+  //       setTotalPages(Math.ceil(response.data.totalProducts/limit));
+  //     } catch (error) {
+  //       console.error("Error fetching products:", error);
+  //     }
+  //   };
 
-    
+  // useEffect(() => {
+  //   // In a real application, fetch products from an API here
 
-    fetchProducts();
-    // setProducts(dummyProducts);
-  }, [page]);
 
-  function handleOnChangePage(newPage){
-    setPage(newPage);
 
-  }
+  //   fetchProducts();
+  //   // setProducts(dummyProducts);
+  // }, [page, activeFilter]);
 
-  if(!products){
-    return <div>Loading...</div>
-  } 
+  // function handleOnChangePage(newPage){
+  //   setPage(newPage);
+
+  // }
+
+  // if(!products){
+  //   return <div>Loading...</div>
+  // } 
 
   return (
-    <div className="table-container">
+    <div className="table-container ">
       {/* <h2 className="table-title" >Products</h2> */}
-     
-      <div style={{textAlign:"right", marginBottom:"5px"}}> <Button component={Link} variant="contained" color="success" to="/add-product" disableElevation={true}>Add New Item</Button> </div>
+
+
       <div className="table-wrapper">
-        <table className="product-table">
+        <table className="product-table min-h-10">
           <thead>
             <tr>
               <th>#</th>
@@ -126,21 +137,22 @@ export default function ProductTable() {
           </thead>
 
           <tbody>
-  {products.map((product, index) => (
-    <ProductRow
-      key={product._id}
-      product={product}
-      index={index}
-      page={page}
-      limit={limit}
-      fetchProducts={fetchProducts}
-    />
-  ))}
-</tbody>
+            {products.map((product, index) => (
+              <ProductRow
+                key={product._id}
+                product={product}
+                index={index}
+                page={page}
+                limit={limit}
+                handleDelete={handleDelete}
+                userRole={userRole}
+              />
+            ))}
+          </tbody>
         </table>
 
       </div>
-      <Pagination currentPage={page} totalPages={totalPages} onPageChange={handleOnChangePage} />
+      {/* <Pagination currentPage={page} totalPages={totalPages} onPageChange={handleOnChangePage} /> */}
     </div>
   );
 }

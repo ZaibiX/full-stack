@@ -2,6 +2,8 @@
   padding: 1rem;
   max-width: 1200px;
   margin: auto;
+  /* background-color: orange; */
+  min-height: 200px;
 }
 
 .table-title {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Dashboard from './pages/Dashboard.jsx'
 import './App.css'
 import axios from 'axios';
@@ -16,12 +16,18 @@ import DashboardLayout from './layouts/DashboardLayout.jsx';
 import Users from './pages/users/Users.jsx';
 import CreateUser from './pages/users/CreateUser.jsx';
 import EditUser from './pages/users/EditUser.jsx';
-
+import useAuth from './store/authStore.js';
 
 
 // axios.defaults.withCredentials = true;
 
 function App() {
+  const {checkAuth} = useAuth();
+
+  useEffect( ()=>{
+     checkAuth();
+  },[checkAuth]);
+
   return (
     //use layouts with nested routes
     <>

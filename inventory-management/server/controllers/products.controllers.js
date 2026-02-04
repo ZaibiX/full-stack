@@ -151,7 +151,7 @@ export async function readAllProducts(req, res) {
 
         else if (filter === "low-stock") {
             const result = await Product.aggregate([
-                { $match: { quantity: { $lt: 5 } } }, // low stock filter
+                { $match: { quantity: { $lt: 10 } } }, // low stock filter
                 { $sort: { createdAt: -1 } },       // sort
                 {
                     $facet: {

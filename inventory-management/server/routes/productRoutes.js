@@ -6,7 +6,7 @@ import allowedRoles from "../middleware/allowedRoles.js";
 
 const router = express.Router();
 
-router.get("/single-product/:id", protectRoutes, allowedRoles(["Admin", "Store-manager"]),readSingleProduct);
+router.get("/single-product/:id", protectRoutes, allowedRoles(["Admin", "Store-manager","Employee"]),readSingleProduct);
 
 router.get("/products", protectRoutes, allowedRoles(["Admin", "Store-manager","Employee"]),readAllProducts);
 

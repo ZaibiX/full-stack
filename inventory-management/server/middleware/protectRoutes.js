@@ -8,6 +8,12 @@ export default function protectRoutes(req, res, next){
 
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // console.log("protect routes decoded: ",decoded)
+
+        if(!decoded){
+            return res.status(401).json({message:"Unauthorized, invalid token"});
+        }
         // req.userId = decoded.userId;
         req.user = {role: decoded.userRole, id: decoded.userId};
         next();

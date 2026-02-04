@@ -1,151 +1,144 @@
-import { useState } from "react";
-import "../../styles/productForm.css";
-import { Link, useNavigate } from "react-router";
-import axios from "axios";
+import React, { useState } from 'react';
+import { 
+  Box, TextField, MenuItem, Button, Paper, Typography, InputAdornment, IconButton 
+} from '@mui/material';
+import { ArrowBack, Save, CloudUpload, Clear } from '@mui/icons-material';
+import { useNavigate } from 'react-router';
+import axiosInstance from '../../utils/axiosInstance';
 
-export default function AddProduct() {
+const AddProduct = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    quantity: "",
-    category: "",
+    name: '',
+    description: '',
+    price: '',
+    quantity: '',
+    category: '',
     imageFile: null,
   });
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  // handle text & select inputs
-  function handleChange(e) {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-  // handle file input separately
-  function handleFileChange(e) {
-    setFormData((prev) => ({
-      ...prev,
-      imageFile: e.target.files[0],
-    }));
-  }
+  const handleFileChange = (e) => {
+    setFormData((prev) => ({ ...prev, imageFile: e.target.files[0] }));
+  };
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    // Create FormData object
     const data = new FormData();
-    data.append("name", formData.name);
-    data.append("description", formData.description);
-    data.append("price", formData.price);
-    data.append("quantity", formData.quantity);
-    data.append("category", formData.category);
-    data.append("imageFile", formData.imageFile);
+    Object.keys(formData).forEach(key => {
+      data.append(key, formData[key]);
+    });
 
     try {
-      setLoading(true);
-      const res = await axios.post("http://localhost:3000/api/product", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      await axiosInstance.post('/api/product', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-
-      const result = res.data;
-      console.log("Product added:", result);
-
-      alert("Product added successfully!");
-      navigate("/");
-    } catch (error) {
-      console.error("Error adding product:", error);
-    }finally{
+      navigate('/app/products');
+    } catch (err) {
+      console.error("Error adding product:", err.response?.data?.message || err.message);
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <div>
-        <div><Link to="/" className="back-link"> {"< "}Back</Link></div>
-        <div className="product-form-container">
-      <h2>Add Product</h2>
+    <div className="p-4 md:p-8 max-w-2xl mx-auto">
+      {/* Back Button */}
+      <button 
+        onClick={() => navigate('/app/products')} 
+        className="flex items-center text-blue-600 mb-4 hover:underline transition-all"
+      >
+        <ArrowBack fontSize="small" className="mr-1" /> Back to Products
+      </button>
 
-      <form className="product-form" onSubmit={handleSubmit}>
-        <label>
-          Name
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Product name"
-            required
+      <Paper className="p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 md:w-11/12 mx-auto">
+        <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
+          Add New Product
+        </Typography>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <TextField
+            fullWidth label="Product Name" name="name"
+            value={formData.name} onChange={handleChange} required
           />
-        </label>
 
-        <label>
-          Description
-          <textarea
-            name="description"
-            value={formData.description}
+          <TextField
+            fullWidth label="Description" name="description"
+            multiline rows={3} value={formData.description}
             onChange={handleChange}
-            placeholder="Product description"
           />
-        </label>
 
-        <label>
-          Price
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            placeholder="Price"
-            required
-          />
-        </label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <TextField
+              label="Price" name="price" type="number"
+              value={formData.price} onChange={handleChange} required
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+            />
+            <TextField
+              label="Quantity" name="quantity" type="number"
+              value={formData.quantity} onChange={handleChange} required
+            />
+          </div>
 
-        <label>
-          Quantity
-          <input
-            type="number"
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            placeholder="Quantity"
-            required
-          />
-        </label>
-
-        <label>
-          Category
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            required
+          <TextField
+            fullWidth select label="Category" name="category"
+            value={formData.category} onChange={handleChange} required
           >
-            <option value="">Select category</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Clothing">Clothing</option>
-            <option value="Books">Books</option>
-          </select>
-        </label>
+            <MenuItem value="Electronics">Electronics</MenuItem>
+            <MenuItem value="Clothing">Clothing</MenuItem>
+            <MenuItem value="Books">Books</MenuItem>
+          </TextField>
 
-        <label>
-          Image
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-        </label>
+          {/* Styled File Upload */}
+          <Box className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+            <input
+              accept="image/*"
+              style={{ display: 'none' }}
+              id="raised-button-file"
+              type="file"
+              onChange={handleFileChange}
+            />
+            <label htmlFor="raised-button-file">
+              <Button 
+                variant="outlined" component="span" 
+                startIcon={<CloudUpload />}
+                sx={{ mb: formData.imageFile ? 1 : 0 }}
+              >
+                {formData.imageFile ? "Change Image" : "Upload Product Image"}
+              </Button>
+            </label>
+            {formData.imageFile && (
+              <div className="flex items-center justify-center text-sm text-gray-500 mt-2">
+                <span className="truncate max-w-xs">{formData.imageFile.name}</span>
+                <IconButton size="small" onClick={() => setFormData({...formData, imageFile: null})}>
+                  <Clear fontSize="inherit" />
+                </IconButton>
+              </div>
+            )}
+          </Box>
 
-        <button type="submit" className="submit-btn" disabled={loading}>
-          {loading?"Loading":"Add Product"}
-        </button>
-      </form>
-    </div>
+          <Button
+            type="submit" fullWidth variant="contained"
+            size="large" startIcon={<Save />}
+            disabled={loading}
+            className="bg-blue-600 h-12 mt-2 normal-case text-lg"
+            sx={{ borderRadius: 2 }}
+          >
+            {loading ? "Saving..." : "Add Product"}
+          </Button>
+        </form>
+      </Paper>
     </div>
   );
-}
+};
+
+export default AddProduct;
