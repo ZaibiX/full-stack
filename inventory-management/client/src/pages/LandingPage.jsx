@@ -24,7 +24,7 @@ const LandingPage = () => {
       
       <Navbar scrollToLogin={scrollToLogin} />
       {/* --- HERO SECTION --- */}
-      <main className="max-w-7xl mx-auto px-6 py-20 md:py-12 flex flex-col md:flex-row items-center">
+      <main className="max-w-7xl mx-auto px-6 py-6 md:py-12 flex flex-col md:flex-row items-center">
         {/* Left Content */}
         <div className="md:w-1/2 mb-12 md:mb-0">
           <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6">

@@ -16,17 +16,14 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
-import DashboardContent from './DashboardContent';
 import Button from '@mui/material/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
-// import {Outlet} from "react-router"
-import { Link, useLocation } from "react-router"
+import { Link, useLocation } from "react-router";
 import useAuth from '../store/authStore.js';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const drawerWidth = 240;
 
@@ -56,7 +53,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'flex-end',
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -72,8 +68,10 @@ const AppBar = styled(MuiAppBar, {
     {
       props: ({ open }) => open,
       style: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
+        [theme.breakpoints.up('sm')]: {
+          marginLeft: drawerWidth,
+          width: `calc(100% - ${drawerWidth}px)`,
+        },
         transition: theme.transitions.create(['width', 'margin'], {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen,
@@ -116,63 +114,30 @@ const menuItems = [
   
 export default function MiniDrawer({ children }) {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); 
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  const handleDrawerOpen = () => setOpen(true);
+  const handleDrawerClose = () => setOpen(false);
 
   const { logout, user, authLoading } = useAuth();
-  return (
-    <Box sx={{ display: 'flex', mb: 10 }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open} style={{ backgroundColor: "#F9FAFB", }} >
-        <Toolbar>
-          <IconButton
-            color="black"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={[
-              {
-                marginRight: 5,
-              },
-              open && { display: 'none' },
-            ]}
-          >
-            <MenuIcon />
-          </IconButton>
-          {/* <Typography variant="h6" noWrap component="div" className="title">
-            Mini variant drawer
-          </Typography> */}
-          <h1 className="title">StockTrack</h1>
-          <Button sx={{ml:"auto"}} loading={authLoading} onClick={logout} variant="outlined" endIcon={<LogoutIcon />}>Logout</Button>
 
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open} style={{ backgroundColor: "#F9FAFB", }} slotProps={{ paper: { sx: { backgroundColor: "#F9FAFB", } }, }}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {menuItems.map((item, index) => {
+  const drawerContent = (
+    <>
+      <DrawerHeader>
+        <IconButton onClick={handleDrawerClose}>
+          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+        </IconButton>
+      </DrawerHeader>
+      <Divider />
+      <List>
+        {menuItems.map((item) => {
+          if (!item.allowedRoles.includes(user.role)) return null;
+          const isActive = location.pathname === item.path;
 
-            // Check if the user's role is allowed to see this menu item
-            if (!item.allowedRoles.includes(user.role)) {
-              return null; // Skip rendering this item
-            }
-
-            // Check if this specific item is the active route
-            const isActive = location.pathname === item.path;
-
-            return (<ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
+          return (
+            <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={[
                   {
@@ -185,33 +150,18 @@ export default function MiniDrawer({ children }) {
                       backgroundColor: isActive ? 'rgba(25, 118, 210, 0.12)' : 'rgba(0, 0, 0, 0.04)',
                     },
                   },
-                  open
-                    ? {
-                      justifyContent: 'initial',
-                    }
-                    : {
-                      justifyContent: 'center',
-                    },
+                  // Only apply centering logic if it's the desktop mini-drawer
+                  !isMobile && !open ? { justifyContent: 'center' } : { justifyContent: 'initial' },
                 ]}
-
                 component={Link}
                 to={item.path}
+                onClick={isMobile ? handleDrawerClose : null}
               >
                 <ListItemIcon
                   sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: 'center',
-
-
-                    },
-                    open
-                      ? {
-                        mr: 3,
-                      }
-                      : {
-                        mr: 'auto',
-                      },
+                    { minWidth: 0, justifyContent: 'center' },
+                    // Only apply margin logic if it's the desktop mini-drawer
+                    !isMobile && open ? { mr: 3 } : { mr: isMobile ? 3 : 'auto' },
                   ]}
                 >
                   {item.icon}
@@ -219,76 +169,83 @@ export default function MiniDrawer({ children }) {
                 <ListItemText
                   primary={item.text}
                   sx={[
-                    open
-                      ? {
-                        opacity: 1,
-                      }
-                      : {
-                        opacity: 0,
-                      },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>)
-          })}
-        </List>
-        {/* <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: 'initial',
-                      }
-                    : {
-                        justifyContent: 'center',
-                      },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: 'center',
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: 'auto',
-                        },
-                  ]}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
+                    // Hide text only in the desktop "closed" mini-state
+                    !isMobile && !open ? { opacity: 0 } : { opacity: 1 }
                   ]}
                 />
               </ListItemButton>
             </ListItem>
-          ))}
-        </List> */}
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          );
+        })}
+      </List>
+    </>
+  );
+
+  return (
+    <Box sx={{ display: 'flex', mb: 10 }}>
+      <CssBaseline />
+      <AppBar position="fixed" open={!isMobile && open} sx={{ backgroundColor: "#F9FAFB", boxShadow: 1 }} >
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton
+              // color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={[
+                { marginRight: { xs: 2, sm: 5 }, },
+                // Keep the menu icon visible on mobile even when open so user can toggle
+                (!isMobile && open) && { display: 'none' }, 
+              ]}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="h1" className="title" sx={{ fontFamily: 'Playwrite GB J Guides, cursive', fontWeight: '500', fontSize: { xs: '1.2rem', sm: '1.5rem' } }}>
+              StockTrack
+            </Typography>
+          </Box>
+          <Button 
+            loading={authLoading} 
+            onClick={logout} 
+            variant="outlined" 
+            size={isMobile ? "small" : "medium"}
+            endIcon={<LogoutIcon />}
+          >
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      {/* MOBILE DRAWER: Only renders when screen is small */}
+      {isMobile ? (
+        <MuiDrawer
+          variant="temporary"
+          open={open}
+          onClose={handleDrawerClose}
+          ModalProps={{ keepMounted: true }} // Better open performance on mobile.
+          sx={{
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor: "#F9FAFB" },
+          }}
+        >
+          {drawerContent}
+        </MuiDrawer>
+      ) : (
+        /* DESKTOP DRAWER: Only renders when screen is medium or larger */
+        <Drawer
+          variant="permanent"
+          open={open}
+        >
+          {drawerContent}
+        </Drawer>
+      )}
+
+      <Box component="main" sx={{ 
+        flexGrow: 1, 
+        p: { xs: 2, sm: 3 }, 
+        width: "100%", // Box will naturally fill available space in the flex container
+        overflowX: 'hidden'
+      }}>
         <DrawerHeader />
-        {/* <DashboardContent/> */}
-        {/* <Outlet /> */}
         {children}
       </Box>
     </Box>
