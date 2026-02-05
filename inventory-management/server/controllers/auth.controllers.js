@@ -25,11 +25,15 @@ export async function login(req, res)
         const token = generateToken(user._id, user.role);
         
         console.log("Login successful, generated token for:", email);
+        console.log(process.env.NODE_ENV);
         return res.cookie("jwt", token, {
             httpOnly:true, //js cannot access cookie
-            secure: process.env.NODE_ENV !== "development", //only https not http
+            // secure: process.env.NODE_ENV !== "development", //only https not http
             maxAge: 1000*60*60, //1 hr
             sameSite:"strict", //only send to this site from where it is sent
+            // sameSite:"lax",
+            secure: false,
+            
 
         }).json({
             user:{name:user.name,

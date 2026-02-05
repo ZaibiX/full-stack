@@ -23,7 +23,7 @@ const ProductFilter = ({ activeFilter, onFilterChange }) => {
         </Typography>
       </div>
       
-      <Stack direction="row" spacing={1} className="overflow-x-auto pb-2">
+      <Stack direction="row" spacing={0} className="overflow-x-auto pb-2 flex-wrap items-start gap-2 justify-start">
         {filters.map((filter) => (
           <Chip
             key={filter.id}
